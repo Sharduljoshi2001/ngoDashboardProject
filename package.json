@@ -1,0 +1,17 @@
+{
+  "name": "ngo-impact-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build && cp -r dist ../backend/public",
+    "start": "cd backend && NODE_ENV=production npm start",
+    "test:backend": "jest --config jest.backend.config.js"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
+  }
+}
