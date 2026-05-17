@@ -1,12 +1,19 @@
 const { isValidMonth } = require("./month");
 
+/** NGO ID must not look like a negative-only number (-5, - 42); allows NGO-042 etc. */
+const NGO_ID_NEGATIVE_NUMBER = /^-\s*\d+\s*$/;
+
 function validateReport(body) {
   const errors = [];
   const { ngo_id, month, people_helped, events_conducted, funds_utilized } =
     body || {};
 
-  if (!ngo_id || typeof ngo_id !== "string" || ngo_id.trim().length === 0) {
+  const trimmedId = typeof ngo_id === "string" ? ngo_id.trim() : "";
+
+  if (!trimmedId) {
     errors.push("ngo_id is required and must be a non-empty string.");
+  } else if (NGO_ID_NEGATIVE_NUMBER.test(trimmedId)) {
+    errors.push("ngo_id cannot be a negative number.");
   }
 
   if (!isValidMonth(month)) {

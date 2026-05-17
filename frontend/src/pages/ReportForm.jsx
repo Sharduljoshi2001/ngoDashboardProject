@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { submitReport } from "../utils/api";
 
+/** Same rule as backend: reject IDs that are negative numbers only (-5, - 42). */
+const NGO_ID_NEGATIVE_NUMBER = /^-\s*\d+\s*$/;
+
 const currentMonth = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -27,7 +30,10 @@ export default function ReportForm() {
 
   function validate() {
     const e = {};
-    if (!form.ngo_id.trim()) e.ngo_id = "NGO ID is required.";
+    const idTrim = form.ngo_id.trim();
+    if (!idTrim) e.ngo_id = "NGO ID is required.";
+    else if (NGO_ID_NEGATIVE_NUMBER.test(idTrim))
+      e.ngo_id = "NGO ID cannot be a negative number.";
     if (!form.month) e.month = "Month is required.";
     if (form.people_helped === "" || Number(form.people_helped) < 0)
       e.people_helped = "Enter a valid number ≥ 0.";

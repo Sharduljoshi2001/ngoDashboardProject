@@ -114,6 +114,15 @@ describe("Backend API (HTTP)", () => {
       );
     });
 
+    test("POST /api/report — 400 when ngo_id is a negative number", async () => {
+      const res = await request(app)
+        .post("/api/report")
+        .send({ ...validReport, ngo_id: "- 42" })
+        .expect(400);
+
+      expect(res.body.errors.some((e) => e.includes("ngo_id"))).toBe(true);
+    });
+
     test("POST /api/report — 400 when funds_utilized is not a number", async () => {
       const res = await request(app)
         .post("/api/report")
